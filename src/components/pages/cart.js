@@ -10,8 +10,23 @@ import {
   ButtonGroup,
   Label
 } from "react-bootstrap";
+import { bindActionCreators } from "redux";
+import { deleteCartItem } from "../../actions/cartActions";
 
 class Cart extends React.Component {
+  onDelete(_id) {
+    const currentBookToDelete = this.props.cart;
+
+    const indexToDelete = currentBookToDelete.findIndex(function(cart) {
+      return cart._id === _id;
+    });
+    let cartAfterDelete = [
+      ...currentBookToDelete.slice(0, indexToDelete),
+      ...currentBookToDelete.slice(indexToDelete + 1)
+    ];
+
+    this.props.deleteCartItem(cartAfterDelete);
+  }
   render() {
     if (this.props.cart[0]) {
       return this.renderCart();
@@ -30,7 +45,7 @@ class Cart extends React.Component {
             <Row>
               <Col xs={12} sm={4}>
                 <h6>{cartArr.title}</h6>
-                <span>    </span>
+                <span> </span>
               </Col>
               <Col xs={12} sm={2}>
                 <h6>usd. {cartArr.price}</h6>
@@ -48,8 +63,12 @@ class Cart extends React.Component {
                   <Button bsStyle="default" bsSize="small">
                     +
                   </Button>
-                  <span>    </span>
-                  <Button bsStyle="danger" bsSize="small">
+                  <span> </span>
+                  <Button
+                    onClick={this.onDelete.bind(this, cartArr._id)}
+                    bsStyle="danger"
+                    bsSize="small"
+                  >
                     DELETE
                   </Button>
                 </ButtonGroup>
@@ -58,7 +77,7 @@ class Cart extends React.Component {
           </Panel.Body>
         </Panel>
       );
-    });
+    }, this);
     return (
       <Panel bsStyle="primary">
         <Panel.Heading>
@@ -75,5 +94,15 @@ function mapStateToProps(state) {
     cart: state.cart.cart
   };
 }
-
-export default connect(mapStateToProps)(Cart);
+function mapDispatchToProps(dispatch) {
+  return bindActionCreators(
+    {
+      deleteCartItem: deleteCartItem
+    },
+    dispatch
+  );
+}
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Cart);
