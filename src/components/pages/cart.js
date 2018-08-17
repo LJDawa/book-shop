@@ -11,7 +11,7 @@ import {
   Label
 } from "react-bootstrap";
 import { bindActionCreators } from "redux";
-import { deleteCartItem } from "../../actions/cartActions";
+import { deleteCartItem, updateCart } from "../../actions/cartActions";
 
 class Cart extends React.Component {
   onDelete(_id) {
@@ -27,6 +27,14 @@ class Cart extends React.Component {
 
     this.props.deleteCartItem(cartAfterDelete);
   }
+  onIncrement(_id) {
+    this.props.updateCart(_id, 1);
+  }
+  onDecrement(_id, quantity) {
+    if (quantity > 1) {
+      this.props.updateCart(_id, -1);
+    }
+  }
   render() {
     if (this.props.cart[0]) {
       return this.renderCart();
@@ -40,8 +48,8 @@ class Cart extends React.Component {
   renderCart() {
     const cartItemsList = this.props.cart.map(function(cartArr) {
       return (
-        <Panel>
-          <Panel.Body key={cartArr._id}>
+        <Panel key={cartArr._id}>
+          <Panel.Body>
             <Row>
               <Col xs={12} sm={4}>
                 <h6>{cartArr.title}</h6>
@@ -52,15 +60,28 @@ class Cart extends React.Component {
               </Col>
               <Col xs={12} sm={2}>
                 <h6>
-                  qty. <Label bsStyle="success" />
+                  qty.
+                  <Label bsStyle="success">{cartArr.quantity}</Label>
                 </h6>
               </Col>
               <Col xs={6} sm={4}>
                 <ButtonGroup style={{ minWidth: "300px" }}>
-                  <Button bsStyle="default" bsSize="small">
+                  <Button
+                    onClick={this.onDecrement.bind(
+                      this,
+                      cartArr._id,
+                      cartArr.quantity
+                    )}
+                    bsStyle="default"
+                    bsSize="small"
+                  >
                     -
                   </Button>
-                  <Button bsStyle="default" bsSize="small">
+                  <Button
+                    onClick={this.onIncrement.bind(this, cartArr._id)}
+                    bsStyle="default"
+                    bsSize="small"
+                  >
                     +
                   </Button>
                   <span> </span>
@@ -97,7 +118,8 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
   return bindActionCreators(
     {
-      deleteCartItem: deleteCartItem
+      deleteCartItem: deleteCartItem,
+      updateCart: updateCart
     },
     dispatch
   );
