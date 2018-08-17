@@ -1,6 +1,7 @@
 "use strict";
 import React from "react";
 import { render } from "react-dom";
+import { Provider } from "react-redux";
 import { applyMiddleware, createStore } from "redux";
 import reducers from "./reducers/index";
 import { addToCart } from "./actions/cartActions";
@@ -13,7 +14,12 @@ const store = createStore(reducers, middleware);
 
 import BooksList from "./components/pages/booksList";
 
-render(<BooksList />, document.getElementById("app"));
+render(
+  <Provider store={store}>
+    <BooksList />
+  </Provider>,
+  document.getElementById("app")
+);
 
 //STEP2 create the dispatch action
 store.dispatch(
@@ -33,7 +39,7 @@ store.dispatch(
   ])
 );
 
-//DELETE a book
+/* //DELETE a book
 store.dispatch(
   deleteBooks({
     id: 1
@@ -50,4 +56,4 @@ store.dispatch(
 
 //-->> CART ACTIONS <<--
 //ADD to cart
-store.dispatch(addToCart([{ id: 1 }]));
+store.dispatch(addToCart([{ id: 1 }])); */
