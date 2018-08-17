@@ -31,18 +31,18 @@ render(
 /* //DELETE a book
 store.dispatch(
   deleteBooks({
-    id: 1
+    _id: 1
   })
 );
 
 //UPDATE a book
 store.dispatch(
   updateBooks({
-    id: 2,
+    _id: 2,
     title: "Learn react in 24h"
   })
 );
 
 //-->> CART ACTIONS <<--
 //ADD to cart
-store.dispatch(addToCart([{ id: 1 }])); */
+store.dispatch(addToCart([{ _id: 1 }])); */
