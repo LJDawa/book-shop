@@ -8,7 +8,8 @@ import {
   Well,
   Button,
   ButtonGroup,
-  Label
+  Label,
+  Modal
 } from "react-bootstrap";
 import { bindActionCreators } from "redux";
 import { deleteCartItem, updateCart } from "../../actions/cartActions";
@@ -34,6 +35,18 @@ class Cart extends React.Component {
     if (quantity > 1) {
       this.props.updateCart(_id, -1);
     }
+  }
+  constructor() {
+    super();
+    this.state = {
+      showModal: false
+    };
+  }
+  open() {
+    this.setState({ showModal: true });
+  }
+  close() {
+    this.setState({ showModal: false });
   }
   render() {
     if (this.props.cart[0]) {
@@ -104,7 +117,35 @@ class Cart extends React.Component {
         <Panel.Heading>
           <Panel.Title>Cart</Panel.Title>
         </Panel.Heading>
-        <Panel.Body>{cartItemsList}</Panel.Body>
+        <Panel.Body>
+          {cartItemsList}
+          <Row>
+            <Col xs={12}>
+              <h6>Total amount:</h6>
+              <Button
+                onClick={this.open.bind(this)}
+                bsStyle="success"
+                bsSize="small"
+              >
+                PROCEED TO CHECKOUT
+              </Button>
+            </Col>
+          </Row>
+        </Panel.Body>
+        <Modal show={this.state.showModal} onHide={this.close.bind(this)}>
+          <Modal.Header closeButton>
+            <Modal.Title>Thank you!</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <h6>Your order has been saved</h6>
+          </Modal.Body>
+          <Modal.Footer>
+            <Col xs={6}>
+              <h6>total $: </h6>
+            </Col>
+            <Button onClick={this.close.bind(this)}>Close</Button>
+          </Modal.Footer>
+        </Modal>
       </Panel>
     );
   }
